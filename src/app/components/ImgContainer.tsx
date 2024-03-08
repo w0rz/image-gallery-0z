@@ -1,22 +1,39 @@
 import type { Photo } from "@/models/Images";
 import Image from "next/image";
+import Link from "next/link";
 
 type Props = {
   photo: Photo;
 };
 
 export default function ImgContainer({ photo }: Props) {
+  const widthHeightRatio = photo.height / photo.width;
+  const galleryHeight = Math.ceil(250 * widthHeightRatio);
+  const photoSpans = Math.ceil(galleryHeight / 10) + 1;
+
   return (
-    <div className="h-64 bg-gray-200 rounded-xl relative overflow-hidden group">
-      <Image
-        src={photo.src.large}
-        alt={photo.alt}
-        fill={true}
-        sizes="(min-width: 1620px) 276px, (min-width: 1320px) calc(8.57vw + 139px), (min-width: 1060px) 25vw, (min-width: 800px) calc(33.33vw - 14px), (min-width: 540px) calc(50vw - 15px), calc(100vw - 20px)"
-        placeholder="blur"
-        blurDataURL={photo.blurredDataUrl}
-        className="object-cover group-hover:opacity-75"
-      />
+    <div
+      className="w-[250px] justify-self-center"
+      style={{ gridRow: `span ${photoSpans}` }}
+    >
+      <Link
+        href={photo.url}
+        target="_blank"
+        className="grid place-content-center"
+      >
+        <div className="rounded-xl overflow-hidden group">
+          <Image
+            src={photo.src.large}
+            alt={photo.alt}
+            width={photo.width}
+            height={photo.height}
+            sizes="250px"
+            placeholder="blur"
+            blurDataURL={photo.blurredDataUrl}
+            className="group-hover:opacity-75"
+          />
+        </div>
+      </Link>
     </div>
   );
 }
